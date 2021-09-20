@@ -1,5 +1,6 @@
 import "./App.css";
 
+import { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -60,11 +61,38 @@ const rows = [
 ];
 
 function App() {
+  const [state, setState] = useState({
+    data: rows,
+    sortby: null,
+    descending: false,
+  });
+  const _sort = function (e) {
+    let column = e.target.cellIndex;
+    let data = state.data.slice();
+    let descending = state.sortby === column && !state.descending;
+    // Sort data
+    data.sort(function (a, b) {
+      return descending
+        ? a[column] < b[column]
+          ? 1
+          : -1
+        : a[column] > b[column]
+        ? 1
+        : -1;
+    });
+    //
+    setState({
+      data: data,
+      sortby: column,
+      descending: descending,
+    });
+  };
+
   return (
     <div className="App">
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
+          <TableHead onClick={_sort}>
             <TableRow>
               <TableCell>Book</TableCell>
               <TableCell align="center">Author</TableCell>
@@ -74,7 +102,7 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, rowId) => (
+            {state.data.map((row, rowId) => (
               <TableRow
                 key={rowId}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
