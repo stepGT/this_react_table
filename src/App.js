@@ -60,6 +60,14 @@ const rows = [
   ),
 ];
 
+const headers = [
+  'Book',
+  'Author',
+  'Language',
+  'Publisher',
+  'Price'
+]
+
 function App() {
   const [state, setState] = useState({
     data: rows,
@@ -94,11 +102,16 @@ function App() {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead onClick={_sort}>
             <TableRow>
-              <TableCell>Book</TableCell>
-              <TableCell align="center">Author</TableCell>
-              <TableCell align="center">Language</TableCell>
-              <TableCell align="center">Publisher</TableCell>
-              <TableCell align="center">Price</TableCell>
+              {headers.map((title, id) => {
+                if (state.sortby === id) {
+                  title += state.descending ? " \u2191" : " \u2193";
+                }
+                return (
+                  <TableCell key={id} align="center">
+                    {title}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
