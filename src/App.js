@@ -90,11 +90,12 @@ function App() {
         : -1;
     });
     //
-    setState({
+    setState((prevState) => ({
+      ...prevState,
       data: data,
       sortby: column,
       descending: descending,
-    });
+    }));
   };
 
   const _showEditor = (e) => {
