@@ -9,6 +9,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+
 const data = [
   [
     "The Road to React",
@@ -95,6 +98,11 @@ function App() {
     }));
   };
 
+  const _save = (e) => {
+    e.preventDefault();
+    console.log('test')
+  }
+
   return (
     <div className="App">
       <TableContainer component={Paper}>
@@ -115,15 +123,23 @@ function App() {
           </TableHead>
           <TableBody onDoubleClick={_showEditor}>
             {state.data.map((row, rowId) => (
-              <TableRow
-                key={rowId}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell data-row={rowId}>{row.book}</TableCell>
-                <TableCell data-row={rowId}>{row.author}</TableCell>
-                <TableCell data-row={rowId}>{row.language}</TableCell>
-                <TableCell data-row={rowId}>{row.publisher}</TableCell>
-                <TableCell data-row={rowId}>{row.price}</TableCell>
+              <TableRow key={rowId}>
+                {row.map(function (cell, cellId) {
+                  let content = cell;
+                  let edit = state.edit;
+                  if (edit && edit.row === rowId && edit.cell === cellId) {
+                    content = (
+                      <Box onSubmit={_save} component="form">
+                        <TextField defaultValue={cell} />
+                      </Box>
+                    );
+                  }
+                  return (
+                    <TableCell key={cellId} data-row={rowId}>
+                      {content}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
