@@ -98,16 +98,11 @@ function App() {
     }));
   };
 
-  let _textFieldValue;
-  const _handleTextFieldChange = function (e) {
-    _textFieldValue = e.target.value;
-  };
-
   const _save = (e) => {
     e.preventDefault();
     // Copy state
     let data = [...state.data];
-    data[state.edit.row][state.edit.cell] = _textFieldValue;
+    data[state.edit.row][state.edit.cell] = e.target[0].value;
     //
     setState((prevState) => ({
       ...prevState,
@@ -143,7 +138,7 @@ function App() {
                   if (edit && edit.row === rowId && edit.cell === cellId) {
                     content = (
                       <Box onSubmit={_save} component="form">
-                        <TextField onChange={_handleTextFieldChange} defaultValue={cell} />
+                        <TextField defaultValue={cell} />
                       </Box>
                     );
                   }
