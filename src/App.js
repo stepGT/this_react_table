@@ -73,6 +73,7 @@ function App() {
     data: rows,
     sortby: null,
     descending: false,
+    edit: null, // [row index, cell index],
   });
   const _sort = function (e) {
     let column = e.target.cellIndex;
@@ -96,6 +97,16 @@ function App() {
     });
   };
 
+  const _showEditor = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      edit: {
+        row: parseInt(e.target.dataset.row, 10),
+        cell: e.target.cellIndex,
+      },
+    }));
+  };
+
   return (
     <div className="App">
       <TableContainer component={Paper}>
@@ -107,26 +118,24 @@ function App() {
                   title += state.descending ? " \u2191" : " \u2193";
                 }
                 return (
-                  <TableCell key={id} align="center">
+                  <TableCell key={id}>
                     {title}
                   </TableCell>
                 );
               })}
             </TableRow>
           </TableHead>
-          <TableBody>
+          <TableBody onDoubleClick={_showEditor}>
             {state.data.map((row, rowId) => (
               <TableRow
                 key={rowId}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell component="th" scope="row">
-                  {row.book}
-                </TableCell>
-                <TableCell align="center">{row.author}</TableCell>
-                <TableCell align="center">{row.language}</TableCell>
-                <TableCell align="center">{row.publisher}</TableCell>
-                <TableCell align="center">{row.price}</TableCell>
+                <TableCell data-row={rowId}>{row.book}</TableCell>
+                <TableCell data-row={rowId}>{row.author}</TableCell>
+                <TableCell data-row={rowId}>{row.language}</TableCell>
+                <TableCell data-row={rowId}>{row.publisher}</TableCell>
+                <TableCell data-row={rowId}>{row.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>
