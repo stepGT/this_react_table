@@ -12,6 +12,9 @@ import Paper from "@mui/material/Paper";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+
 const data = [
   [
     "The Road to React",
@@ -58,14 +61,17 @@ const headers = [
   'Price'
 ]
 
+let preSearchData;
+
 function App() {
   const [state, setState] = useState({
     data: data,
     sortby: null,
     descending: false,
     edit: null, // [row index, cell index],
-    search: true
+    search: false
   });
+  
   const _sort = function (e) {
     let column = e.target.cellIndex;
     let data = state.data.slice();
@@ -138,8 +144,38 @@ function App() {
     );
   };
 
+  const _toggleSearch = () => {
+    if (state.search) {
+      //
+      setState((prevState) => ({
+        ...prevState,
+        data: preSearchData,
+        search: false,
+      }));
+      preSearchData = null;
+    } else {
+      preSearchData = state.data;
+      //
+      setState((prevState) => ({
+        ...prevState,
+        search: true,
+      }));
+    }
+  };
+
+  const _renderToolbar = () => {
+    return (
+      <Stack my={2} direction="row">
+        <Button onClick={_toggleSearch} variant="contained">
+          Search
+        </Button>
+      </Stack>
+    );
+  };
+
   return (
     <div className="App">
+      {_renderToolbar()}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead onClick={_sort}>
