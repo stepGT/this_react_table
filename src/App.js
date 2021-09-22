@@ -166,7 +166,7 @@ function App() {
                   if (edit && edit.row === rowId && edit.cell === cellId) {
                     content = (
                       <Box onSubmit={_save} component="form">
-                        <TextField defaultValue={cell} />
+                        <TextField variant="standard" defaultValue={cell} />
                       </Box>
                     );
                   }
