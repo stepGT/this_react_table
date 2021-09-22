@@ -64,6 +64,7 @@ function App() {
     sortby: null,
     descending: false,
     edit: null, // [row index, cell index],
+    search: true
   });
   const _sort = function (e) {
     let column = e.target.cellIndex;
@@ -111,6 +112,32 @@ function App() {
     }));
   };
 
+  const _search = (e) => {
+    console.log(e.target.value);
+  };
+
+  const _renderSearch = () => {
+    if (!state.search) {
+      return null;
+    }
+    return (
+      <TableRow onChange={_search}>
+        {headers.map(function (el, id) {
+          return (
+            <TableCell key={id}>
+              <TextField
+                label="Search"
+                type="search"
+                variant="standard"
+                data-id={id}
+              />
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    );
+  };
+
   return (
     <div className="App">
       <TableContainer component={Paper}>
@@ -130,6 +157,7 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody onDoubleClick={_showEditor}>
+            {_renderSearch()}
             {state.data.map((row, rowId) => (
               <TableRow key={rowId}>
                 {row.map(function (cell, cellId) {
