@@ -118,7 +118,25 @@ function App() {
   };
 
   const _search = (e) => {
-    console.log(e.target.value);
+    let searchVal = e.target.value.toLowerCase();
+    // If empty return old state
+    if (!searchVal) {
+      setState((prevState) => ({
+        ...prevState,
+        data: [...prevState.searchdata],
+      }));
+      return;
+    }
+    let id = e.target.dataset.id;
+    // Filter data
+    let filterData = state.searchdata.filter(row => {
+      return row[id].toString().toLowerCase().indexOf(searchVal) > -1;
+    });
+    //
+    setState((prevState) => ({
+      ...prevState,
+      data: filterData,
+    }));
   };
 
   const _renderSearch = () => {
@@ -134,7 +152,9 @@ function App() {
                 label="Search"
                 type="search"
                 variant="standard"
-                data-id={id}
+                inputProps={{
+                  'data-id': id
+                }}
               />
             </TableCell>
           );
