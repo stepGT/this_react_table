@@ -61,11 +61,10 @@ const headers = [
   'Price'
 ]
 
-let preSearchData;
-
 function App() {
   const [state, setState] = useState({
     data: data,
+    searchdata: null,
     sortby: null,
     descending: false,
     edit: null, // [row index, cell index],
@@ -148,17 +147,17 @@ function App() {
     if (state.search) {
       //
       setState((prevState) => ({
-        ...prevState,
-        data: preSearchData,
+        ...prevState, // copy all other field/objects
+        data: [...prevState.searchdata],
         search: false,
+        searchdata: null
       }));
-      preSearchData = null;
     } else {
-      preSearchData = state.data;
       //
       setState((prevState) => ({
-        ...prevState,
-        search: true,
+        ...prevState, // copy all other field/objects
+        searchdata: [...prevState.data],
+        search: true
       }));
     }
   };
