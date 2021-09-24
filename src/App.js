@@ -188,21 +188,13 @@ function App() {
   const _download = (e) => {
     switch (e.target.dataset.type) {
       case "json":
-        _downloadJSON(JSON.stringify(state.data), "data.json", "application/json");
+        _downloadHelper(JSON.stringify(state.data), "data.json", "application/json");
         break;
         case "csv":
         _downloadCSV("data.csv", "text/csv");
         break;
       default:
     }
-  };
-
-  const _downloadJSON = (content, fileName, contentType) => {
-    const a = document.createElement('a');
-    const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
   };
 
   const _downloadCSV = (fileName, contentType) => {
@@ -217,9 +209,13 @@ function App() {
           }, '')
         + "\n";
     }, '');
-    const a = document.createElement('a');
-    const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
+    _downloadHelper(content, fileName, contentType);
+  }
+
+  const _downloadHelper = (content, fileName, contentType) => {
+    const a = document.createElement("a");
+    const blob = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(blob);
     a.download = fileName;
     a.click();
   }
