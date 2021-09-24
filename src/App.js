@@ -190,6 +190,9 @@ function App() {
       case "json":
         _downloadJSON(JSON.stringify(state.data), "data.json", "application/json");
         break;
+        case "csv":
+        _downloadCSV("data.csv", "text/csv");
+        break;
       default:
     }
   };
@@ -202,6 +205,25 @@ function App() {
     a.click();
   };
 
+  const _downloadCSV = (fileName, contentType) => {
+    let content = state.data.reduce(function(result, row) {
+      return result
+        + row.reduce(function(rowresult, cell, idx) {
+            return rowresult 
+              + '"' 
+              + cell.replace(/"/g, '""')
+              + '"'
+              + (idx < row.length - 1 ? ',' : '');
+          }, '')
+        + "\n";
+    }, '');
+    const a = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
+  }
+
   const _renderToolbar = () => {
     return (
       <Stack spacing={2} my={2} direction="row">
@@ -210,6 +232,9 @@ function App() {
         </Button>
         <Button data-type='json' onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
           JSON
+        </Button>
+        <Button data-type='csv' onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
+          CSV
         </Button>
       </Stack>
     );
