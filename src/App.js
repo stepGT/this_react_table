@@ -15,6 +15,8 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
+import SearchIcon from '@mui/icons-material/Search';
+
 const data = [
   [
     "The Road to React",
@@ -184,8 +186,8 @@ function App() {
 
   const _renderToolbar = () => {
     return (
-      <Stack my={2} direction="row">
-        <Button onClick={_toggleSearch} variant="contained">
+      <Stack spacing={2} my={2} direction="row">
+        <Button startIcon={<SearchIcon/>} onClick={_toggleSearch} variant="contained">
           Search
         </Button>
       </Stack>
