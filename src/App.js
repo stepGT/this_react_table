@@ -186,7 +186,20 @@ function App() {
   };
 
   const _download = (e) => {
-    console.log(e)
+    switch (e.target.dataset.type) {
+      case "json":
+        _downloadJSON(JSON.stringify(state.data), "data.json", "application/json");
+        break;
+      default:
+    }
+  };
+
+  const _downloadJSON = (content, fileName, contentType) => {
+    const a = document.createElement('a');
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
   };
 
   const _renderToolbar = () => {
@@ -195,7 +208,7 @@ function App() {
         <Button startIcon={<SearchIcon/>} onClick={_toggleSearch} variant="contained">
           Search
         </Button>
-        <Button onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
+        <Button data-type='json' onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
           JSON
         </Button>
       </Stack>
