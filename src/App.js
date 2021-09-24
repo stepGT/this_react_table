@@ -44,14 +44,14 @@ const data = [
     "Integrating D3.js with React",
     "Elad Elrom",
     "English",
-    "Apress; 1st ed. edition (June 4, 2021)",
+    "Apress 1st ed. edition (June 4, 2021)",
     "$43.19",
   ],
   [
     "Learn React Hooks",
     "Daniel Bugl",
     "English",
-    "Packt Publishing; 1st edition (October 18, 2019)",
+    "Packt Publishing 1st edition (October 18, 2019)",
     "$20.63",
   ],
 ];
