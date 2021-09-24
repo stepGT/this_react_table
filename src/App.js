@@ -16,6 +16,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import SearchIcon from '@mui/icons-material/Search';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const data = [
   [
@@ -184,11 +185,18 @@ function App() {
     }
   };
 
+  const _download = (e) => {
+    console.log(e)
+  };
+
   const _renderToolbar = () => {
     return (
       <Stack spacing={2} my={2} direction="row">
         <Button startIcon={<SearchIcon/>} onClick={_toggleSearch} variant="contained">
           Search
+        </Button>
+        <Button onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
+          JSON
         </Button>
       </Stack>
     );
