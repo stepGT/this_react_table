@@ -15,6 +15,9 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
+import SearchIcon from '@mui/icons-material/Search';
+import DownloadIcon from '@mui/icons-material/Download';
+
 const data = [
   [
     "The Road to React",
@@ -41,14 +44,14 @@ const data = [
     "Integrating D3.js with React",
     "Elad Elrom",
     "English",
-    "Apress; 1st ed. edition (June 4, 2021)",
+    "Apress 1st ed. edition (June 4, 2021)",
     "$43.19",
   ],
   [
     "Learn React Hooks",
     "Daniel Bugl",
     "English",
-    "Packt Publishing; 1st edition (October 18, 2019)",
+    "Packt Publishing 1st edition (October 18, 2019)",
     "$20.63",
   ],
 ];
@@ -61,11 +64,10 @@ const headers = [
   'Price'
 ]
 
-let preSearchData;
-
 function App() {
   const [state, setState] = useState({
     data: data,
+    searchdata: null,
     sortby: null,
     descending: false,
     edit: null, // [row index, cell index],
@@ -119,7 +121,25 @@ function App() {
   };
 
   const _search = (e) => {
-    console.log(e.target.value);
+    let searchVal = e.target.value.toLowerCase();
+    // If empty return old state
+    if (!searchVal) {
+      setState((prevState) => ({
+        ...prevState,
+        data: [...prevState.searchdata],
+      }));
+      return;
+    }
+    let id = e.target.dataset.id;
+    // Filter data
+    let filterData = state.searchdata.filter(row => {
+      return row[id].toString().toLowerCase().indexOf(searchVal) > -1;
+    });
+    //
+    setState((prevState) => ({
+      ...prevState,
+      data: filterData,
+    }));
   };
 
   const _renderSearch = () => {
@@ -135,7 +155,9 @@ function App() {
                 label="Search"
                 type="search"
                 variant="standard"
-                data-id={id}
+                inputProps={{
+                  'data-id': id
+                }}
               />
             </TableCell>
           );
@@ -148,26 +170,67 @@ function App() {
     if (state.search) {
       //
       setState((prevState) => ({
-        ...prevState,
-        data: preSearchData,
+        ...prevState, // copy all other field/objects
+        data: [...prevState.searchdata],
         search: false,
+        searchdata: null
       }));
-      preSearchData = null;
     } else {
-      preSearchData = state.data;
       //
       setState((prevState) => ({
-        ...prevState,
-        search: true,
+        ...prevState, // copy all other field/objects
+        searchdata: [...prevState.data],
+        search: true
       }));
     }
   };
 
+  const _download = (e) => {
+    switch (e.target.dataset.type) {
+      case "json":
+        _downloadHelper(JSON.stringify(state.data), "data.json", "application/json");
+        break;
+        case "csv":
+        _downloadCSV("data.csv", "text/csv");
+        break;
+      default:
+    }
+  };
+
+  const _downloadCSV = (fileName, contentType) => {
+    let content = state.data.reduce(function(result, row) {
+      return result
+        + row.reduce(function(rowresult, cell, idx) {
+            return rowresult 
+              + '"' 
+              + cell.replace(/"/g, '""')
+              + '"'
+              + (idx < row.length - 1 ? ',' : '');
+          }, '')
+        + "\n";
+    }, '');
+    _downloadHelper(content, fileName, contentType);
+  }
+
+  const _downloadHelper = (content, fileName, contentType) => {
+    const a = document.createElement("a");
+    const blob = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    a.click();
+  }
+
   const _renderToolbar = () => {
     return (
-      <Stack my={2} direction="row">
-        <Button onClick={_toggleSearch} variant="contained">
+      <Stack spacing={2} my={2} direction="row">
+        <Button startIcon={<SearchIcon/>} onClick={_toggleSearch} variant="contained">
           Search
+        </Button>
+        <Button data-type='json' onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
+          JSON
+        </Button>
+        <Button data-type='csv' onClick={_download} endIcon={<DownloadIcon />} variant="outlined">
+          CSV
         </Button>
       </Stack>
     );
